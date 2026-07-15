@@ -1,0 +1,2045 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DELIMa Detective — Editable App Names & Logos</title>
+<style>
+:root{
+  --dark:#06111f;--dark2:#0b2440;--cyan:#5be7ff;--green:#32e69a;--red:#ff607a;
+  --gold:#ffd36a;--text:#f7fcff;--muted:#9eb7ca;--mint:#e3f2f1;--mint-line:#bdcfce;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:"Segoe UI",Arial,sans-serif}
+body{
+  background:
+    radial-gradient(circle at 14% 0%,rgba(33,116,190,.34),transparent 35%),
+    linear-gradient(145deg,#092441,#030914 62%);
+  color:var(--text);overflow-x:hidden;
+}
+body::before{
+  content:"";position:fixed;inset:0;pointer-events:none;opacity:.16;
+  background-image:linear-gradient(rgba(91,231,255,.11) 1px,transparent 1px),
+                   linear-gradient(90deg,rgba(91,231,255,.11) 1px,transparent 1px);
+  background-size:46px 46px;
+}
+body.portal-mode{
+  background:
+    radial-gradient(circle at 12% 0%,rgba(24,111,178,.34),transparent 34%),
+    radial-gradient(circle at 92% 18%,rgba(19,189,232,.12),transparent 26%),
+    linear-gradient(145deg,#081f38,#030914 64%);
+  color:var(--text)
+}
+body.portal-mode::before{display:block;opacity:.1}
+button,input{font:inherit}
+button{border:0}
+.screen{display:none;min-height:100vh;padding:24px;position:relative;z-index:1}
+.screen.active{display:flex}
+.panel{
+  border:1px solid rgba(91,231,255,.25);
+  background:linear-gradient(160deg,rgba(15,43,74,.91),rgba(4,13,28,.94));
+  box-shadow:0 26px 90px rgba(0,0,0,.48),inset 0 1px rgba(255,255,255,.05);
+  border-radius:24px;backdrop-filter:blur(12px)
+}
+.primary,.secondary,.danger{
+  min-height:50px;border-radius:14px;padding:0 22px;cursor:pointer;font-weight:800;
+  letter-spacing:.04em;transition:.18s ease
+}
+.primary{color:#00141d;background:linear-gradient(135deg,#78f1ff,#19bde8);box-shadow:0 10px 28px rgba(25,189,232,.28)}
+.secondary{color:#fff;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.13)}
+.danger{color:#fff;background:rgba(255,96,122,.15);border:1px solid rgba(255,96,122,.38)}
+.primary:hover,.secondary:hover,.danger:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.primary:disabled{opacity:.5;cursor:not-allowed;transform:none}
+
+
+.public-guide{display:grid;gap:9px;margin:22px 0 2px}
+.guide-item{display:grid;grid-template-columns:31px minmax(0,1fr);gap:11px;align-items:center;padding:10px 12px;border-radius:13px;background:rgba(255,255,255,.045);border:1px solid rgba(91,231,255,.12);color:#c9dce8;font-size:13px;line-height:1.45}
+.guide-item b{width:31px;height:31px;border-radius:10px;display:grid;place-items:center;color:#00141d;background:linear-gradient(135deg,#78f1ff,#19bde8);box-shadow:0 5px 16px rgba(25,189,232,.22)}
+
+/* START */
+#startScreen{align-items:center;justify-content:center}
+.start-grid{width:min(1020px,100%);display:grid;grid-template-columns:1.08fr .92fr;gap:22px}
+.start-main,.start-rank{padding:34px}
+.eyebrow{font-size:12px;letter-spacing:.18em;color:var(--cyan);font-weight:900;text-transform:uppercase}
+.start-main h1{font-size:clamp(46px,7vw,78px);line-height:.95;margin:14px 0 18px;letter-spacing:-.04em}
+.start-main h1 span{color:var(--cyan)}
+.start-main p{color:var(--muted);line-height:1.65}
+.form{display:grid;gap:11px;margin-top:25px}
+.form label{font-weight:800}
+.form input{
+  height:56px;border-radius:14px;border:1px solid rgba(91,231,255,.36);
+  background:rgba(0,7,17,.7);color:white;padding:0 17px;outline:none
+}
+.form input:focus{border-color:var(--cyan);box-shadow:0 0 0 4px rgba(91,231,255,.1)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:8px}
+.rank-title{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:16px}
+.rank-title h3{margin:0}.rank-title span{color:var(--gold);font-weight:900}
+.ranking-list{display:grid;gap:9px}
+.rank-row{
+  display:grid;grid-template-columns:40px minmax(0,1fr) auto;gap:10px;align-items:center;
+  min-height:50px;padding:9px 11px;border-radius:13px;background:rgba(255,255,255,.05);
+  border:1px solid rgba(255,255,255,.07)
+}
+.rank-no{color:var(--gold);font-weight:900}.rank-team{font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.rank-time{color:var(--cyan);font-weight:900;font-variant-numeric:tabular-nums}
+.empty{color:var(--muted);line-height:1.6;padding:14px 4px}
+
+/* CASE */
+#caseScreen{align-items:stretch;justify-content:center}
+.case-wrap{width:min(1320px,100%);display:flex;flex-direction:column;gap:18px}
+.case-head{display:flex;justify-content:space-between;align-items:center}
+.brand{display:flex;align-items:center;gap:13px}
+.brand-mark{width:48px;height:48px;border-radius:14px;display:grid;place-items:center;font-size:24px;color:var(--cyan);
+  border:1px solid rgba(91,231,255,.4);background:rgba(91,231,255,.08);box-shadow:0 0 28px rgba(91,231,255,.18)}
+.brand h2,.brand p{margin:0}.brand h2{letter-spacing:.08em}.brand p{font-size:13px;color:var(--muted);margin-top:4px}
+.case-meta{text-align:right}.case-group{color:var(--cyan);font-weight:900}.case-number{color:var(--muted);margin-top:4px}
+.case-file{flex:1;min-height:665px;padding:28px;position:relative;overflow:hidden}
+.case-file::after{
+  content:"CONFIDENTIAL";position:absolute;right:25px;top:25px;padding:8px 12px;border-radius:8px;
+  color:rgba(255,96,122,.78);border:2px solid rgba(255,96,122,.62);font-weight:900;letter-spacing:.15em;transform:rotate(4deg)
+}
+.case-title{text-align:center;margin:30px 0 34px}.case-title h1{font-size:clamp(34px,5vw,58px);margin:8px 0}
+.case-title p{color:var(--muted);margin:0}
+.deal{display:flex;justify-content:center;align-items:stretch;gap:18px;flex-wrap:wrap;min-height:330px}
+.flip-card{width:min(190px,17vw);min-width:150px;height:274px;perspective:1200px}
+.flip-inner{position:relative;width:100%;height:100%;transition:transform .72s cubic-bezier(.2,.8,.2,1);transform-style:preserve-3d}
+.flip-card.flipped .flip-inner{transform:rotateY(180deg)}
+.flip-face{
+  position:absolute;inset:0;border-radius:22px;backface-visibility:hidden;overflow:hidden;
+  border:1px solid rgba(91,231,255,.65);
+  box-shadow:0 0 16px rgba(91,231,255,.35),0 0 42px rgba(25,189,232,.2),inset 0 0 30px rgba(91,231,255,.06);
+  animation:edgeGlow 2.2s ease-in-out infinite alternate
+}
+@keyframes edgeGlow{
+  from{box-shadow:0 0 12px rgba(91,231,255,.28),0 0 28px rgba(25,189,232,.12)}
+  to{box-shadow:0 0 22px rgba(91,231,255,.65),0 0 52px rgba(25,189,232,.3)}
+}
+.flip-face::before{
+  content:"";position:absolute;inset:-40%;background:linear-gradient(120deg,transparent 39%,rgba(255,255,255,.24) 50%,transparent 61%);
+  transform:translateX(-68%) rotate(8deg);animation:shine 3.5s linear infinite
+}
+@keyframes shine{0%{transform:translateX(-72%) rotate(8deg)}55%,100%{transform:translateX(72%) rotate(8deg)}}
+.flip-back{display:grid;place-items:center;background:radial-gradient(circle,rgba(91,231,255,.17),transparent 53%),linear-gradient(150deg,#0e3154,#06111f)}
+.question{width:84px;height:84px;border-radius:24px;display:grid;place-items:center;font-size:43px;font-weight:900;color:var(--cyan);
+  border:1px solid rgba(91,231,255,.55);background:rgba(0,0,0,.24)}
+.flip-front{transform:rotateY(180deg);background:linear-gradient(160deg,#103255,#050e1b);display:flex;flex-direction:column;justify-content:center;align-items:center;text-align:center;padding:17px}
+.flip-front img{
+  max-width:70px;
+  max-height:70px;
+  width:auto;
+  height:auto;
+  border-radius:12px;
+  object-fit:contain;
+  object-position:center;
+  display:block;
+}
+.flip-front h3{font-size:19px;margin:20px 0 0;line-height:1.2}.flip-front p{display:none}
+.case-controls{display:flex;justify-content:center;margin-top:27px}
+.case-status{text-align:center;color:var(--muted);min-height:24px;margin-top:13px}
+
+/* PORTAL SHELL — V2 + V3 HYBRID */
+#portalScreen{flex-direction:column;padding:16px;gap:13px}
+.game-strip{
+  width:min(1540px,100%);margin:0 auto;display:grid;grid-template-columns:1fr auto auto;
+  align-items:center;gap:16px;padding:11px 15px;border-radius:17px;
+  color:#f5fcff;background:linear-gradient(135deg,rgba(18,60,78,.96),rgba(5,28,42,.96));
+  border:1px solid rgba(91,231,255,.22);box-shadow:0 16px 42px rgba(0,0,0,.28),inset 0 1px rgba(255,255,255,.05)
+}
+.portal-brandline{display:flex;align-items:center;gap:11px;min-width:0}
+.portal-symbol{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;color:#00141d;font-size:19px;font-weight:900;background:linear-gradient(135deg,#76efff,#18bce7);box-shadow:0 0 24px rgba(91,231,255,.23)}
+.portal-identity{min-width:0}.portal-identity b{display:block;color:#a7f3ff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.portal-identity small{display:block;margin-top:2px;color:#a8bec7;font-size:11px}
+.page-counter{padding:8px 13px;border:1px solid rgba(255,255,255,.1);border-radius:11px;background:rgba(255,255,255,.045);font-size:12px;font-weight:900;letter-spacing:.08em;color:#c9edf3}
+.live-timer{min-width:150px;text-align:center;padding:9px 13px;border-radius:12px;background:#071f2a;color:#ffe380;font-size:25px;font-weight:900;font-variant-numeric:tabular-nums;border:1px solid rgba(255,227,128,.18);box-shadow:inset 0 0 24px rgba(255,211,106,.04)}
+.portal-layout{
+  width:min(1540px,100%);margin:0 auto;display:grid;grid-template-columns:265px minmax(720px,1fr) 300px;
+  gap:14px;align-items:start
+}
+.game-side{
+  color:white;border-radius:18px;padding:17px;position:sticky;top:12px;
+  background:linear-gradient(155deg,rgba(17,57,72,.97),rgba(5,26,36,.98));
+  border:1px solid rgba(91,231,255,.16);box-shadow:0 18px 46px rgba(0,0,0,.3),inset 0 1px rgba(255,255,255,.04)
+}
+.side-title{display:flex;justify-content:space-between;align-items:center;gap:10px;margin:0 0 10px;font-size:14px;letter-spacing:.04em}
+.side-title span:last-child{color:#9beeff}
+.hearts{font-size:25px;letter-spacing:2px;min-height:36px;margin-bottom:12px;filter:drop-shadow(0 0 7px rgba(255,80,110,.18))}
+.mini-cards{display:grid;gap:9px}
+.mini-card{
+  display:grid;grid-template-columns:46px minmax(0,1fr) 27px;gap:9px;align-items:center;
+  padding:9px;border-radius:13px;background:rgba(255,255,255,.045);
+  border:1px solid rgba(91,231,255,.18);box-shadow:0 0 14px rgba(91,231,255,.035);transition:.25s ease
+}
+.mini-card img{width:46px;height:46px;border-radius:50%;object-fit:contain;background:#fff}
+.mini-name{font-size:12px;font-weight:800;line-height:1.18;overflow-wrap:anywhere}
+.mini-check{font-size:21px;color:rgba(255,255,255,.25)}
+.mini-card.found{border-color:rgba(50,230,154,.78);background:rgba(50,230,154,.1);box-shadow:0 0 21px rgba(50,230,154,.18)}
+.mini-card.found .mini-check{color:var(--green);animation:pop .35s ease}
+@keyframes pop{0%{transform:scale(.25)}70%{transform:scale(1.25)}100%{transform:scale(1)}}
+.side-actions{display:grid;gap:8px;margin-top:14px}.side-actions button{min-height:42px;border-radius:11px}
+.portal-rank .rank-row{background:rgba(255,255,255,.055)}.portal-rank .rank-time{color:#a7f3ff}
+.rank-note{font-size:11px;line-height:1.55;color:#aac0c6;margin-top:13px}
+
+/* CUSTOM DELIMA PORTAL — page order and tile coordinates stay identical to the screenshots */
+.delima-frame{
+  --portal-surface:#dff1f0;--portal-surface-2:#edf8f7;--portal-ink:#65787d;
+  position:relative;min-height:720px;overflow:hidden;border-radius:21px;color:var(--portal-ink);
+  background:linear-gradient(180deg,var(--portal-surface-2),var(--portal-surface));
+  border:1px solid rgba(202,226,224,.95);
+  box-shadow:0 22px 62px rgba(0,0,0,.25),0 0 0 1px rgba(91,231,255,.08)
+}
+.delima-frame::before{
+  content:"";position:absolute;inset:50px 0 0;pointer-events:none;opacity:.44;
+  background:radial-gradient(circle at 12% 18%,rgba(255,255,255,.9),transparent 24%),radial-gradient(circle at 89% 82%,rgba(162,215,212,.36),transparent 29%)
+}
+.delima-frame::after{
+  content:"DELIMa PORTAL";position:absolute;z-index:1;right:22px;bottom:18px;color:rgba(52,98,102,.07);
+  font-size:34px;font-weight:1000;letter-spacing:.14em;pointer-events:none
+}
+.delima-header{
+  position:relative;z-index:3;height:50px;display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center;
+  padding:0 17px;border-bottom:1px solid #c3d9d7;color:#476a6e;font-size:12px;letter-spacing:.025em;
+  background:rgba(255,255,255,.56);backdrop-filter:blur(12px)
+}
+.delima-header .center{text-align:center;color:#2f5f65;font-weight:900}.delima-header .right{text-align:right}
+.delima-content{position:relative;z-index:2;padding:26px 42px 88px;min-height:668px}
+.page-grid{
+  display:grid;grid-template-columns:repeat(6,minmax(0,1fr));grid-template-rows:repeat(6,101px);
+  column-gap:25px;row-gap:7px;align-content:start
+}
+.delima-app{
+  appearance:none;background:transparent;cursor:pointer;color:#718287;padding:5px 3px;border-radius:15px;
+  display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:8px;min-width:0;
+  transition:transform .16s ease,background .16s ease,box-shadow .16s ease
+}
+.delima-app:hover{transform:translateY(-4px);background:rgba(255,255,255,.58);box-shadow:0 9px 24px rgba(73,119,119,.09)}
+.delima-icon{
+  width:58px;height:58px;border-radius:50%;background:#fff;display:grid;place-items:center;overflow:hidden;
+  border:1px solid rgba(96,138,138,.08);box-shadow:0 4px 14px rgba(66,111,111,.1)
+}
+.delima-icon img{
+  /* AUTO-FIT: any large, wide or tall logo is scaled down proportionally. */
+  width:82%;
+  height:82%;
+  max-width:40px;
+  max-height:40px;
+  object-fit:contain;
+  object-position:center;
+  display:block;
+}
+.delima-label{width:100%;font-size:12px;line-height:1.2;text-align:center;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.delima-app.correct{animation:correct .55s ease}.delima-app.wrong{animation:wrong .52s ease}.delima-app.done{opacity:.62}
+@keyframes correct{45%{filter:drop-shadow(0 0 11px rgba(32,196,125,.9));transform:scale(1.07)}}
+@keyframes wrong{20%{transform:translateX(-7px)}40%{transform:translateX(7px);filter:drop-shadow(0 0 8px rgba(255,80,100,.75))}60%{transform:translateX(-4px)}80%{transform:translateX(4px)}}
+.page-nav{
+  position:absolute;z-index:4;left:50%;bottom:14px;transform:translateX(-50%);display:flex;align-items:center;gap:9px;
+  padding:8px 12px;border-radius:999px;background:rgba(255,255,255,.62);box-shadow:0 6px 20px rgba(59,100,100,.1)
+}
+.page-dot{width:7px;height:7px;border-radius:50%;padding:0;background:#b4c2c3;cursor:pointer;transition:.15s ease}
+.page-dot.active{background:#168ff6;box-shadow:0 0 0 4px rgba(22,143,246,.11)}
+.page-arrow{
+  position:absolute;z-index:4;bottom:13px;width:41px;height:41px;border-radius:50%;background:rgba(255,255,255,.78);
+  color:#557277;font-size:22px;cursor:pointer;box-shadow:0 5px 18px rgba(65,100,100,.13);transition:.17s ease
+}
+.page-arrow:hover{transform:translateY(-2px)}.page-arrow.prev{left:15px}.page-arrow.next{right:15px}.page-arrow:disabled{opacity:.22;cursor:not-allowed;transform:none}
+
+/* TOAST + MODAL */
+.toast{
+  position:fixed;top:18px;left:50%;transform:translate(-50%,-18px);z-index:1000;min-width:min(440px,calc(100vw - 34px));
+  padding:13px 17px;border-radius:13px;text-align:center;font-weight:900;opacity:0;pointer-events:none;
+  color:white;background:rgba(5,20,27,.96);box-shadow:0 18px 50px rgba(0,0,0,.35);transition:.22s ease
+}
+.toast.show{opacity:1;transform:translate(-50%,0)}
+.toast.good{border:1px solid rgba(50,230,154,.65);color:#7bffc0}.toast.bad{border:1px solid rgba(255,96,122,.65);color:#ff9daf}
+.toast.info{border:1px solid rgba(91,231,255,.55);color:#9ff2ff}
+.modal{
+  display:none;position:fixed;inset:0;z-index:1100;place-items:center;padding:20px;background:rgba(0,8,13,.78);backdrop-filter:blur(9px)
+}
+.modal.show{display:grid}
+.result{width:min(550px,100%);padding:32px;text-align:center}
+.result-icon{font-size:58px}.result-title{font-size:clamp(35px,7vw,58px);line-height:1;margin:10px 0 8px}
+.result-title.new{color:var(--gold)}.result-title.fail{color:var(--red)}
+.result-group{color:var(--cyan);font-weight:900}.result-time{font-size:42px;font-weight:900;font-variant-numeric:tabular-nums;margin:10px 0}
+.result-extra{color:var(--muted);line-height:1.6}.result-actions{display:flex;justify-content:center;gap:10px;flex-wrap:wrap;margin-top:22px}
+
+@media(max-width:1180px){
+  .portal-layout{grid-template-columns:210px minmax(720px,1fr)}
+  .portal-rank{grid-column:1/-1;position:static}.portal-rank .ranking-list{grid-template-columns:repeat(5,minmax(150px,1fr));overflow-x:auto}
+}
+@media(max-width:780px){
+  .screen{padding:14px}.start-grid{grid-template-columns:1fr}.portal-layout{grid-template-columns:1fr}
+  .game-side{position:static}.page-grid{grid-template-columns:repeat(3,minmax(0,1fr));grid-auto-rows:100px}
+  .delima-content{padding:18px 18px 70px}.game-strip{grid-template-columns:1fr}.live-timer{justify-self:start}
+  .flip-card{width:145px;min-width:135px;height:220px}
+}
+</style>
+</head>
+<body>
+<div id="toast" class="toast"></div>
+
+<section id="startScreen" class="screen active">
+  <div class="start-grid">
+    <main class="panel start-main">
+      <div class="eyebrow">Computer Club · Fiesta Kokurikulum</div>
+      <h1>DELIMa<br><span>Detective</span></h1>
+      <p>Welcome to the DELIMa Detective challenge. Work with your team to uncover five mystery applications and locate every match before all five hearts are lost.</p>
+      <div class="public-guide">
+        <div class="guide-item"><b>1</b><span>Enter your team name and open a new case.</span></div>
+        <div class="guide-item"><b>2</b><span>Memorise the five application cards as they are revealed.</span></div>
+        <div class="guide-item"><b>3</b><span>Browse every DELIMa page and select the correct applications as quickly as possible.</span></div>
+      </div>
+      <div class="form">
+        <label for="groupName">Team Name</label>
+        <input id="groupName" maxlength="30" autocomplete="off" placeholder="Example: Byte Hunters">
+        <div class="actions">
+          <button id="startBtn" class="primary">START MISSION</button>
+          <button id="resetRankBtn" class="danger">🔒 RESET TOP 5</button>
+        </div>
+      </div>
+    </main>
+    <aside class="panel start-rank">
+      <div class="rank-title"><h3>🏆 Top 5 Detectives</h3><span>BEST TIME</span></div>
+      <div id="startRanking" class="ranking-list"></div>
+    </aside>
+  </div>
+</section>
+
+<section id="caseScreen" class="screen">
+  <div class="case-wrap">
+    <header class="case-head">
+      <div class="brand"><div class="brand-mark">🕵️</div><div><h2>DELIMa DETECTIVE</h2><p>Fiesta Kokurikulum Challenge</p></div></div>
+      <div class="case-meta"><div id="caseGroup" class="case-group">—</div><div id="caseNo" class="case-number">CASE #00000</div></div>
+    </header>
+    <main class="panel case-file">
+      <div class="case-title"><div class="eyebrow">CONFIDENTIAL CASE FILE</div><h1>Identify the Five Assigned Applications</h1><p>Memorise the applications as the cards flip. The mission timer starts automatically when the DELIMa Portal opens.</p></div>
+      <div id="dealArea" class="deal"></div>
+      <div class="case-controls"><button id="drawBtn" class="primary">REVEAL EVIDENCE</button></div>
+      <div id="caseStatus" class="case-status">Awaiting case generation...</div>
+    </main>
+  </div>
+</section>
+
+<section id="portalScreen" class="screen">
+  <header class="game-strip">
+    <div class="portal-brandline">
+      <div class="portal-symbol">D</div>
+      <div class="portal-identity"><b id="portalGroup">TEAM: —</b><small id="portalCase">CASE #00000 · DELIMa PORTAL</small></div>
+    </div>
+    <div id="pageCounter" class="page-counter">PAGE 1 / 13</div>
+    <div id="timer" class="live-timer">00:00.00</div>
+  </header>
+  <div class="portal-layout">
+    <aside class="game-side">
+      <h3 class="side-title"><span>CASE FILE</span><span id="foundCount">0/5</span></h3>
+      <div id="hearts" class="hearts">❤️❤️❤️❤️❤️</div>
+      <div id="miniCards" class="mini-cards"></div>
+      <div class="side-actions"><button id="abortBtn" class="danger">END MISSION</button></div>
+    </aside>
+
+    <main id="delimaFrame" class="delima-frame">
+      <div class="delima-header">
+        <div>Ruang Pembelajaran Saya</div>
+        <div id="delimaTitle" class="center">Ruang Sekolah</div>
+        <div class="right">Menu Utama</div>
+      </div>
+      <div class="delima-content"><div id="pageGrid" class="page-grid"></div></div>
+      <button id="prevPage" class="page-arrow prev" aria-label="Previous page">‹</button>
+      <div id="pageDots" class="page-nav"></div>
+      <button id="nextPage" class="page-arrow next" aria-label="Next page">›</button>
+    </main>
+
+    <aside class="game-side portal-rank">
+      <div class="rank-title"><h3>🏆 Top 5 Fastest Teams</h3><span>BEST TIME</span></div>
+      <div id="portalRanking" class="ranking-list"></div>
+      <div class="rank-note">Only successful attempts enter the Top 5. Each team’s fastest result is kept on this device.</div>
+    </aside>
+  </div>
+</section>
+
+<div id="resultModal" class="modal">
+  <div class="panel result">
+    <div id="resultIcon" class="result-icon">🏆</div>
+    <div id="resultTitle" class="result-title">MISSION COMPLETE</div>
+    <div id="resultGroup" class="result-group">—</div>
+    <div id="resultTime" class="result-time">00:00.00</div>
+    <div id="resultExtra" class="result-extra"></div>
+    <div class="result-actions">
+      <button id="againBtn" class="secondary">PLAY AGAIN</button>
+      <button id="nextGroupBtn" class="primary">NEXT TEAM</button>
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+/* =====================================================================
+   ✏️ EDIT APP NAME & LOGO BELOW — THIS IS THE ONLY SECTION YOU NEED
+
+   HOW TO CHANGE AN APP NAME:
+     1. Press Ctrl + F and search the current app name.
+     2. Change only the text after "name":
+        "name": "Old Name"  →  "name": "New Name"
+
+   HOW TO CHANGE AN APP LOGO:
+     Change only the text after "icon":
+        "icon": "icons/MyLogo.png"
+     OR use a permanent online image URL:
+        "icon": "https://example.com/logo.png"
+
+   IMPORTANT:
+     • Keep the quotation marks and commas.
+     • Do NOT change pageIndex or position if you want the app to stay
+       on the same DELIMa page and in the same location.
+     • Large, wide and tall logos are automatically resized to fit.
+     • A temporary signed URL containing X-Goog-Expires will expire.
+       Download that image and use a local path such as icons/logo.png.
+
+   EXAMPLE:
+     {
+       "id": "p3-2-notebook-lm",
+       "name": "NotebookLM",
+       "icon": "icons/NotebookLM.png",
+       "website": "https://notebooklm.google.com/",
+       "pageTitle": "AI Tools For Student",
+       "pageIndex": 2,
+       "position": 1
+     }
+   ===================================================================== */
+
+const DELIMA_PAGES = [
+  {
+    "title": "Ruang Sekolah",
+    "apps": [
+      {
+        "id": "p1-1-pkld",
+        "name": "PKLD",
+        "icon": "icons/PKLD.png",
+        "website": "",
+        "pageTitle": "Ruang Sekolah",
+        "pageIndex": 0,
+        "position": 0
+      }
+    ]
+  },
+  {
+    "title": "Bahan Interaktif",
+    "apps": [
+      {
+        "id": "p2-1-phet-interactive-simulations",
+        "name": "PhET: Interactive Simulations",
+        "icon": "icons/Phet.png",
+        "website": "https://phet.colorado.edu/",
+        "pageTitle": "Bahan Interaktif",
+        "pageIndex": 1,
+        "position": 0
+      },
+      {
+        "id": "p2-2-buku-teks-digital",
+        "name": "Buku Teks Digital Interaktif",
+        "icon": "icons/bukuteks.png",
+        "website": "",
+        "pageTitle": "Bahan Interaktif",
+        "pageIndex": 1,
+        "position": 1
+      },
+      {
+        "id": "p2-3-aplikasi-buku-digital",
+        "name": "Aplikasi Bahan Interaktif",
+        "icon": "icons/aplikasibahaninteraktif.jpg",
+        "website": "",
+        "pageTitle": "Bahan Interaktif",
+        "pageIndex": 1,
+        "position": 2
+      },
+      {
+        "id": "p2-4-minecraft-education",
+        "name": "Minecraft Education",
+        "icon": "icons/minecrafteducation.png",
+        "website": "",
+        "pageTitle": "Bahan Interaktif",
+        "pageIndex": 1,
+        "position": 3
+      },
+      {
+        "id": "p2-5-google-interland",
+        "name": "Google Interland",
+        "icon": "icons/googleinterland.png",
+        "website": "",
+        "pageTitle": "Bahan Interaktif",
+        "pageIndex": 1,
+        "position": 4
+      }
+    ]
+  },
+  {
+    "title": "AI Tools For Student",
+    "apps": [
+      {
+        "id": "p3-1-tanyabuku",
+        "name": "TanyaBuku(Experiment)",
+        "icon": "icons/tanyabuku.jpg",
+        "website": "",
+        "pageTitle": "AI Tools For Student",
+        "pageIndex": 2,
+        "position": 0
+      },
+      {
+        "id": "p3-2-notebook-lm",
+        "name": "Notebook LM",
+        "icon": "icons/notebooklm.png",
+        "website": "https://notebooklm.google.com/",
+        "pageTitle": "AI Tools For Student",
+        "pageIndex": 2,
+        "position": 1
+      },
+      {
+        "id": "p3-3-ms-copilot",
+        "name": "MS Copilot AI",
+        "icon": "icons/mscopilotai.png",
+        "website": "https://copilot.microsoft.com/",
+        "pageTitle": "AI Tools For Student",
+        "pageIndex": 2,
+        "position": 2
+      },
+      {
+        "id": "p3-4-gemini-ai",
+        "name": "Gemini AI",
+        "icon": "icons/geminiai.png",
+        "website": "https://gemini.google.com/",
+        "pageTitle": "AI Tools For Student",
+        "pageIndex": 2,
+        "position": 3
+      },
+      {
+        "id": "p3-5-chat-gpt",
+        "name": "Chat GPT",
+        "icon": "icons/chatgpt.png",
+        "website": "https://chatgpt.com/",
+        "pageTitle": "AI Tools For Student",
+        "pageIndex": 2,
+        "position": 4
+      },
+      {
+        "id": "p3-6-conker-ai",
+        "name": "Conker AI",
+        "icon": "icons/conkerai.png",
+        "website": "https://www.conker.ai/",
+        "pageTitle": "AI Tools For Student",
+        "pageIndex": 2,
+        "position": 5
+      },
+      {
+        "id": "p3-7-khan-academy",
+        "name": "Khan Academy",
+        "icon": "icons/khanacademy.png",
+        "website": "https://www.khanacademy.org/",
+        "pageTitle": "AI Tools For Student",
+        "pageIndex": 2,
+        "position": 6
+      },
+      {
+        "id": "p3-8-perplexity",
+        "name": "Perplexity",
+        "icon": "icons/perplexity.jpg",
+        "website": "https://www.perplexity.ai/",
+        "pageTitle": "AI Tools For Student",
+        "pageIndex": 2,
+        "position": 7
+      },
+      {
+        "id": "p3-9-bing-image-creator",
+        "name": "Bing Image Creator",
+        "icon": "icons/bingimage.png",
+        "website": "https://www.bing.com/images/create",
+        "pageTitle": "AI Tools For Student",
+        "pageIndex": 2,
+        "position": 8
+      },
+      {
+        "id": "p3-10-suno-ai",
+        "name": "SUNO AI",
+        "icon": "icons/sunoai.jpg",
+        "website": "https://suno.com/",
+        "pageTitle": "AI Tools For Student",
+        "pageIndex": 2,
+        "position": 9
+      },
+      {
+        "id": "p3-11-pixlr-ai-image-generator",
+        "name": "Pixlr AI Image Generator",
+        "icon": "icons/pixlr.png",
+        "website": "",
+        "pageTitle": "AI Tools For Student",
+        "pageIndex": 2,
+        "position": 10
+      }
+    ]
+  },
+  {
+    "title": "Aktiviti - Murid",
+    "apps": [
+      {
+        "id": "p4-1-reading-coach",
+        "name": "Reading Coach",
+        "icon": "icons/readingcoach.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 0
+      },
+      {
+        "id": "p4-2-dewan-bahasa-dan-pustaka",
+        "name": "Dewan Bahasa Pustaka",
+        "icon": "icons/dewanbahasa.jpg",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 1
+      },
+      {
+        "id": "p4-3-pandai-app",
+        "name": "Pandai App",
+        "icon": "icons/pandai.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 2
+      },
+      {
+        "id": "p4-4-canva",
+        "name": "Canva",
+        "icon": "icons/canva.png",
+        "website": "https://www.canva.com/",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 3
+      },
+      {
+        "id": "p4-5-adiwira-nutrisi",
+        "name": "Adiwira Nutrisi",
+        "icon": "icons/adiwira.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 4
+      },
+      {
+        "id": "p4-6-perbadanan",
+        "name": "Perbadanan Kota Buku",
+        "icon": "icons/bookcapital.jpg",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 5
+      },
+      {
+        "id": "p4-7-yilmu",
+        "name": "Yilmu",
+        "icon": "icons/yilmu.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 6
+      },
+      {
+        "id": "p4-8-misi-celik-kewangan",
+        "name": "Misi Celik Kewangan BSN",
+        "icon": "icons/bsn.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 7
+      },
+      {
+        "id": "p4-9-read-along",
+        "name": "Read Along",
+        "icon": "icons/readalong.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 8
+      },
+      {
+        "id": "p4-10-portal-hepili",
+        "name": "Portal HEPILI",
+        "icon": "icons/portalhepili.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 9
+      },
+      {
+        "id": "p4-11-shell-road-safety",
+        "name": "Shell ROAD Safety:#SHELLSELAMATSAMPAI",
+        "icon": "icons/shellroad.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 10
+      },
+      {
+        "id": "p4-12-celcomdigi",
+        "name": "CelcomDigi-Cybersafeinschools",
+        "icon": "icons/celcomdigi.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 11
+      },
+      {
+        "id": "p4-13-shell-stem",
+        "name": "Shell-STEM:SHELLNXPORERS",
+        "icon": "icons/shellstem.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 12
+      },
+      {
+        "id": "p4-14-petrosains",
+        "name": "Petrosains-Pancasains",
+        "icon": "icons/petrosains.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 13
+      },
+      {
+        "id": "p4-15-celcomdigi",
+        "name": "CelcomDigi-Future Skills for All",
+        "icon": "icons/celcomdigifutureskillsforai.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 14
+      },
+      {
+        "id": "p4-16-totalenergies",
+        "name": "TotalEnergies-VIA Safe Mobility Program",
+        "icon": "icons/totalenergies.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 15
+      },
+      {
+        "id": "p4-17-mdec-digital-ninja",
+        "name": "MDEC-Digital Ninja",
+        "icon": "icons/mdec.jpg",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 16
+      },
+      {
+        "id": "p4-18-micro-bit",
+        "name": "Micro:bit",
+        "icon": "icons/microbit.png",
+        "website": "https://microbit.org/",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 17
+      },
+      {
+        "id": "p4-19-petrosains",
+        "name": "Petrosains Discover STEM",
+        "icon": "icons/petrosainsforstem.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 18
+      },
+      {
+        "id": "p4-20-mdec-mydigitalmaker",
+        "name": "MDEC-#mydigitalmaker",
+        "icon": "icons/mydigital.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 19
+      },
+      {
+        "id": "p4-21-unicef",
+        "name": "UNICEF",
+        "icon": "icons/unicef.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 20
+      },
+      {
+        "id": "p4-22-apple-student",
+        "name": "Apple Student Resources",
+        "icon": "icons/applestudent.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 21
+      },
+      {
+        "id": "p4-23-mdec-digital",
+        "name": "MDEC Digital Innovator Programme",
+        "icon": "icons/digitalinovator.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 22
+      },
+      {
+        "id": "p4-24-apple-learning",
+        "name": "Apple Learning with Ipad",
+        "icon": "icons/applelearning.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 23
+      },
+      {
+        "id": "p4-25-maxis-logic",
+        "name": "Maxis Login eKelas",
+        "icon": "icons/maxisekelas.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 24
+      },
+      {
+        "id": "p4-26-mdec-digital",
+        "name": "MDEC Digital Maker Hub",
+        "icon": "icons/digitalmakerhub.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 25
+      },
+      {
+        "id": "p4-27-umw-e-puis",
+        "name": "UMW-E PUISI",
+        "icon": "icons/umw.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 26
+      },
+      {
+        "id": "p4-28-maxis-pandai",
+        "name": "Maxis Panduan Masuk eKelas",
+        "icon": "icons/maxispanduanmasuk.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 27
+      },
+      {
+        "id": "p4-29-mdec-hour-of-code",
+        "name": "MDEC Hour of Code",
+        "icon": "icons/hourofcode.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 28
+      },
+      {
+        "id": "p4-30-bahan-pembelajaran",
+        "name": "Bahan Pembelajaran-Matrikulasi",
+        "icon": "icons/bahanpembelajaran.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 29
+      },
+      {
+        "id": "p4-31-bahan-pembelajaran",
+        "name": "Bahan Pembelajaran BPLTV",
+        "icon": "icons/bpltv.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 30
+      },
+      {
+        "id": "p4-32-fen-kursus",
+        "name": "FEN Kursus Kewangan Asas",
+        "icon": "icons/fen.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 31
+      },
+      {
+        "id": "p4-33-program-pendidikan",
+        "name": "Program Pemerkasaan Pendidikan Digital",
+        "icon": "icons/programpemerkasaan.jpg",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 32
+      },
+      {
+        "id": "p4-34-aplikasi-k",
+        "name": "Aplikasi Kemahiran Digital",
+        "icon": "icons/aplikasikemahirandigital.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 33
+      },
+      {
+        "id": "p4-35-bahan-pembelajaran",
+        "name": "Bahan Pembelajaran BSKK",
+        "icon": "icons/bskk.png",
+        "website": "",
+        "pageTitle": "Aktiviti - Murid",
+        "pageIndex": 3,
+        "position": 34
+      }
+    ]
+  },
+  {
+    "title": "Peraduan & Pertandingan Murid",
+    "apps": [
+      {
+        "id": "p5-1-pertandingan",
+        "name": "Pertandingan Digital Stroytelling Animation",
+        "icon": "icons/digitalstory.png",
+        "website": "",
+        "pageTitle": "Peraduan & Pertandingan Murid",
+        "pageIndex": 4,
+        "position": 0
+      },
+      {
+        "id": "p5-2-pertandingan",
+        "name": "Pertandingan Video Kreatif",
+        "icon": "icons/videokreatif.png",
+        "website": "",
+        "pageTitle": "Peraduan & Pertandingan Murid",
+        "pageIndex": 4,
+        "position": 1
+      },
+      {
+        "id": "p5-3-petrosains",
+        "name": "Petrosains-RBTX Challenge",
+        "icon": "icons/rbtx.png",
+        "website": "",
+        "pageTitle": "Peraduan & Pertandingan Murid",
+        "pageIndex": 4,
+        "position": 2
+      },
+      {
+        "id": "p5-4-mdec-creativity",
+        "name": "MDEC Creativity@Schools",
+        "icon": "icons/creativityschools.png",
+        "website": "",
+        "pageTitle": "Peraduan & Pertandingan Murid",
+        "pageIndex": 4,
+        "position": 3
+      },
+      {
+        "id": "p5-5-program-galakan",
+        "name": "Program Ganjaran Insentif BSN",
+        "icon": "icons/bsn.jpg",
+        "website": "",
+        "pageTitle": "Peraduan & Pertandingan Murid",
+        "pageIndex": 4,
+        "position": 4
+      }
+    ]
+  },
+  {
+    "title": "Pusat Sumber",
+    "apps": [
+      {
+        "id": "p6-1-ains-advanced",
+        "name": "AINS Advanced Integrated Nilam System",
+        "icon": "icons/ains.jpg",
+        "website": "",
+        "pageTitle": "Pusat Sumber",
+        "pageIndex": 5,
+        "position": 0
+      },
+      {
+        "id": "p6-2-u-pustaka",
+        "name": "U-Pustaka",
+        "icon": "icons/upustaka.jpg",
+        "website": "",
+        "pageTitle": "Pusat Sumber",
+        "pageIndex": 5,
+        "position": 1
+      }
+    ]
+  },
+  {
+    "title": "Google Apps",
+    "apps": [
+      {
+        "id": "p7-1-calendar",
+        "name": "Calendar",
+        "icon": "icons/calendar.png",
+        "website": "https://calendar.google.com/",
+        "pageTitle": "Google Apps",
+        "pageIndex": 6,
+        "position": 0
+      },
+      {
+        "id": "p7-2-gmail",
+        "name": "Gmail",
+        "icon": "icons/gmail.png",
+        "website": "https://mail.google.com/",
+        "pageTitle": "Google Apps",
+        "pageIndex": 6,
+        "position": 1
+      },
+      {
+        "id": "p7-3-drive",
+        "name": "Drive",
+        "icon": "icons/drive.png",
+        "website": "https://drive.google.com/",
+        "pageTitle": "Google Apps",
+        "pageIndex": 6,
+        "position": 2
+      },
+      {
+        "id": "p7-4-google-photos",
+        "name": "Google Photos",
+        "icon": "icons/photos.png",
+        "website": "https://photos.google.com/",
+        "pageTitle": "Google Apps",
+        "pageIndex": 6,
+        "position": 3
+      },
+      {
+        "id": "p7-5-docs",
+        "name": "Docs",
+        "icon": "icons/docs.png",
+        "website": "https://docs.google.com/",
+        "pageTitle": "Google Apps",
+        "pageIndex": 6,
+        "position": 4
+      },
+      {
+        "id": "p7-6-slides",
+        "name": "Slides",
+        "icon": "icons/slides.png",
+        "website": "https://slides.google.com/",
+        "pageTitle": "Google Apps",
+        "pageIndex": 6,
+        "position": 5
+      },
+      {
+        "id": "p7-7-sheet",
+        "name": "Sheet",
+        "icon": "icons/sheet.png",
+        "website": "https://sheets.google.com/",
+        "pageTitle": "Google Apps",
+        "pageIndex": 6,
+        "position": 6
+      },
+      {
+        "id": "p7-8-forms",
+        "name": "Forms",
+        "icon": "icons/forms.png",
+        "website": "https://forms.google.com/",
+        "pageTitle": "Google Apps",
+        "pageIndex": 6,
+        "position": 7
+      },
+      {
+        "id": "p7-9-keep",
+        "name": "Keep",
+        "icon": "icons/keep.png",
+        "website": "https://keep.google.com/",
+        "pageTitle": "Google Apps",
+        "pageIndex": 6,
+        "position": 8
+      },
+      {
+        "id": "p7-10-google-translate",
+        "name": "Google Translate",
+        "icon": "icons/googletranslate.png",
+        "website": "https://translate.google.com/",
+        "pageTitle": "Google Apps",
+        "pageIndex": 6,
+        "position": 9
+      },
+      {
+        "id": "p7-11-chat",
+        "name": "Chat",
+        "icon": "icons/chat.png",
+        "website": "https://chat.google.com/",
+        "pageTitle": "Google Apps",
+        "pageIndex": 6,
+        "position": 10
+      },
+      {
+        "id": "p7-12-site",
+        "name": "Site",
+        "icon": "icons/site.png",
+        "website": "https://sites.google.com/",
+        "pageTitle": "Google Apps",
+        "pageIndex": 6,
+        "position": 11
+      },
+      {
+        "id": "p7-13-youtube",
+        "name": "YouTube",
+        "icon": "icons/youtube.png",
+        "website": "https://www.youtube.com/",
+        "pageTitle": "Google Apps",
+        "pageIndex": 6,
+        "position": 12
+      },
+      {
+        "id": "p7-14-google-education",
+        "name": "Google Education",
+        "icon": "icons/googleeducational.png",
+        "website": "",
+        "pageTitle": "Google Apps",
+        "pageIndex": 6,
+        "position": 13
+      },
+      {
+        "id": "p7-15-google-earth",
+        "name": "Google Earth",
+        "icon": "icons/googleearth.png",
+        "website": "https://earth.google.com/",
+        "pageTitle": "Google Apps",
+        "pageIndex": 6,
+        "position": 14
+      },
+      {
+        "id": "p7-16-google-meet",
+        "name": "Google Meet",
+        "icon": "icons/googlemeet.png",
+        "website": "https://meet.google.com/",
+        "pageTitle": "Google Apps",
+        "pageIndex": 6,
+        "position": 15
+      },
+      {
+        "id": "p7-17-google-interland",
+        "name": "Google Interland",
+        "icon": "icons/googleinterland.png",
+        "website": "",
+        "pageTitle": "Google Apps",
+        "pageIndex": 6,
+        "position": 16
+      }
+    ]
+  },
+  {
+    "title": "Inisiatif KPM",
+    "apps": [
+      {
+        "id": "p8-1-generasi-madani",
+        "name": "GENERASI MADANI",
+        "icon": "icons/madani.png",
+        "website": "",
+        "pageTitle": "Inisiatif KPM",
+        "pageIndex": 7,
+        "position": 0
+      }
+    ]
+  },
+  {
+    "title": "Other Apps",
+    "apps": [
+      {
+        "id": "p9-1-kahoot",
+        "name": "Kahoot",
+        "icon": "icons/kahoot.png",
+        "website": "https://kahoot.com/",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 0
+      },
+      {
+        "id": "p9-2-photomash-studio",
+        "name": "Photomash Studio Visual Creator",
+        "icon": "icons/photomash.png",
+        "website": "",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 1
+      },
+      {
+        "id": "p9-3-petrosains",
+        "name": "Petrosains-PIXEL",
+        "icon": "icons/pixel.png",
+        "website": "",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 2
+      },
+      {
+        "id": "p9-4-pixlr-e-photo-editor",
+        "name": "Pixlr E Photo Editor",
+        "icon": "icons/epixel.png",
+        "website": "",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 3
+      },
+      {
+        "id": "p9-5-pixlr-remove-background",
+        "name": "Pixlr Remove Background",
+        "icon": "icons/pixelremovebg.png",
+        "website": "",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 4
+      },
+      {
+        "id": "p9-6-schoolytics",
+        "name": "Schoolytics",
+        "icon": "icons/schoolytics.png",
+        "website": "",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 5
+      },
+      {
+        "id": "p9-7-pixlr-desktop",
+        "name": "Pixlr Desktop Download",
+        "icon": "icons/pixlrdesktop.png",
+        "website": "",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 6
+      },
+      {
+        "id": "p9-8-pixlr-x-quick-editor",
+        "name": "Pixlr X Quick Easy Design",
+        "icon": "icons/pixlrx.png",
+        "website": "",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 7
+      },
+      {
+        "id": "p9-9-quizizz",
+        "name": "Quizizz",
+        "icon": "icons/quizz.png",
+        "website": "https://quizizz.com/",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 8
+      },
+      {
+        "id": "p9-10-tinkercad",
+        "name": "Tinkercad",
+        "icon": "icons/tinkercard.png",
+        "website": "https://www.tinkercad.com/",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 9
+      },
+      {
+        "id": "p9-11-wolframalpha",
+        "name": "WolframAlpha",
+        "icon": "icons/wolfram.png",
+        "website": "https://www.wolframalpha.com/",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 10
+      },
+      {
+        "id": "p9-12-edpuzzle",
+        "name": "Edpuzzle",
+        "icon": "icons/edpuzzle.png",
+        "website": "https://edpuzzle.com/",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 11
+      },
+      {
+        "id": "p9-13-padlet",
+        "name": "Padlet",
+        "icon": "icons/padlet.png",
+        "website": "https://padlet.com/",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 12
+      },
+      {
+        "id": "p9-14-canvas",
+        "name": "Canvas",
+        "icon": "icons/canvas.png",
+        "website": "https://www.instructure.com/canvas",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 13
+      },
+      {
+        "id": "p9-15-plickers",
+        "name": "Plickers",
+        "icon": "icons/plickers.jpg",
+        "website": "https://www.plickers.com/",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 14
+      },
+      {
+        "id": "p9-16-auto-draw",
+        "name": "Auto Draw",
+        "icon": "icons/autodraw.png",
+        "website": "https://www.autodraw.com/",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 15
+      },
+      {
+        "id": "p9-17-nvda-reader",
+        "name": "NVDA Reader",
+        "icon": "icons/nvda.png",
+        "website": "",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 16
+      },
+      {
+        "id": "p9-18-sketchup-for-schools",
+        "name": "SketchUp Edu",
+        "icon": "icons/sketchup.png",
+        "website": "https://edu.sketchup.com/",
+        "pageTitle": "Other Apps",
+        "pageIndex": 8,
+        "position": 17
+      }
+    ]
+  },
+  {
+    "title": "Microsoft Apps",
+    "apps": [
+      {
+        "id": "p10-1-reading-coach",
+        "name": "Reading Coach",
+        "icon": "icons/readingcoach.png",
+        "website": "",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 0
+      },
+      {
+        "id": "p10-2-microsoft-forms",
+        "name": "Microsoft Forms",
+        "icon": "icons/mforms.png",
+        "website": "https://forms.office.com/",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 1
+      },
+      {
+        "id": "p10-3-microsoft-stream",
+        "name": "Microsoft Stream",
+        "icon": "icons/mstream.png",
+        "website": "https://stream.microsoft.com/",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 2
+      },
+      {
+        "id": "p10-4-microsoft-365",
+        "name": "Microsoft 365 Copilot Chat",
+        "icon": "icons/mcopilotchat.png",
+        "website": "https://www.microsoft365.com/",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 3
+      },
+      {
+        "id": "p10-5-dapatkan-inspirasi",
+        "name": "Dapatkan ID DELIMA 365 Anda",
+        "icon": "icons/iddelima365.png",
+        "website": "",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 4
+      },
+      {
+        "id": "p10-6-reset-password",
+        "name": "Reset Password Microsoft",
+        "icon": "icons/resetpassword.png",
+        "website": "",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 5
+      },
+      {
+        "id": "p10-7-microsoft-365",
+        "name": "Microsoft 365 Copilot App",
+        "icon": "icons/mcopilotapp.png",
+        "website": "https://www.microsoft365.com/",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 6
+      },
+      {
+        "id": "p10-8-word",
+        "name": "Word",
+        "icon": "icons/word.png",
+        "website": "https://www.microsoft365.com/launch/word",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 7
+      },
+      {
+        "id": "p10-9-excel",
+        "name": "Excel",
+        "icon": "icons/excel.png",
+        "website": "https://www.microsoft365.com/launch/excel",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 8
+      },
+      {
+        "id": "p10-10-teams",
+        "name": "Teams",
+        "icon": "icons/teams.png",
+        "website": "https://teams.microsoft.com/",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 9
+      },
+      {
+        "id": "p10-11-powerpoint",
+        "name": "PowerPoint",
+        "icon": "icons/ppt.png",
+        "website": "https://www.microsoft365.com/launch/powerpoint",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 10
+      },
+      {
+        "id": "p10-12-yammer",
+        "name": "Yammer",
+        "icon": "icons/yammer.png",
+        "website": "https://www.yammer.com/",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 11
+      },
+      {
+        "id": "p10-13-sway",
+        "name": "Sway",
+        "icon": "icons/sway.png",
+        "website": "https://sway.cloud.microsoft/",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 12
+      },
+      {
+        "id": "p10-14-onenote",
+        "name": "OneNote",
+        "icon": "icons/onenote.png",
+        "website": "https://www.onenote.com/",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 13
+      },
+      {
+        "id": "p10-15-onedrive",
+        "name": "OneDrive",
+        "icon": "icons/onedrive.png",
+        "website": "https://onedrive.live.com/",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 14
+      },
+      {
+        "id": "p10-16-whiteboard",
+        "name": "Whiteboard",
+        "icon": "icons/whiteboard.png",
+        "website": "https://whiteboard.office.com/",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 15
+      },
+      {
+        "id": "p10-17-microsoft-loop",
+        "name": "Microsoft Learn|Educator Center",
+        "icon": "icons/mlearn.png",
+        "website": "https://loop.microsoft.com/",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 16
+      },
+      {
+        "id": "p10-18-microsoft-makecode",
+        "name": "Microsoft MakeCode",
+        "icon": "icons/makecode.png",
+        "website": "",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 17
+      },
+      {
+        "id": "p10-19-minecraft-education",
+        "name": "Minecraft Education",
+        "icon": "icons/minecrafteducation.png",
+        "website": "",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 18
+      },
+      {
+        "id": "p10-20-minecraft",
+        "name": "Minecraft Hour of Code",
+        "icon": "icons/minecrafthourofcode.jpg",
+        "website": "",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 19
+      },
+      {
+        "id": "p10-21-kodu-game-lab",
+        "name": "KODU Game Lab",
+        "icon": "icons/kodu.png",
+        "website": "",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 20
+      },
+      {
+        "id": "p10-22-powtoon-education",
+        "name": "Powtoon Edu",
+        "icon": "icons/powtoon.png",
+        "website": "",
+        "pageTitle": "Microsoft Apps",
+        "pageIndex": 9,
+        "position": 21
+      }
+    ]
+  },
+  {
+    "title": "Kajian Pengukuran Indeks Perpaduan - Murid",
+    "apps": [
+      {
+        "id": "p11-1-kajian-perpaduan-r",
+        "name": "Kajian Pengukuran Indeks Perpaduan-Murid Rendah",
+        "icon": "icons/kajianmuridrendah.png",
+        "website": "",
+        "pageTitle": "Kajian Pengukuran Indeks Perpaduan - Murid",
+        "pageIndex": 10,
+        "position": 0
+      },
+      {
+        "id": "p11-2-kajian-perpaduan-m",
+        "name": "Kajian Pengukuran Indeks Perpaduan-Murid Menengah",
+        "icon": "icons/kajianmuridmenengah.png",
+        "website": "",
+        "pageTitle": "Kajian Pengukuran Indeks Perpaduan - Murid",
+        "pageIndex": 10,
+        "position": 1
+      }
+    ]
+  },
+  {
+    "title": "Rakan DELIMa",
+    "apps": [
+      {
+        "id": "p12-1-rd-pandai",
+        "name": "RD Pandai",
+        "icon": "icons/rdpandai.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 0
+      },
+      {
+        "id": "p12-2-environment",
+        "name": "Environment Management Centre(EMC-UKM)",
+        "icon": "icons/emc.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 1
+      },
+      {
+        "id": "p12-3-rd-canva",
+        "name": "RD Canva",
+        "icon": "icons/rdcanva.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 2
+      },
+      {
+        "id": "p12-4-malaysia-e-learning",
+        "name": "Malaysia Energy Literacy Program(MELP) ",
+        "icon": "icons/melp.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 3
+      },
+      {
+        "id": "p12-5-rd-aquaria",
+        "name": "RD Aquaria KLCC",
+        "icon": "icons/aquariaklcc.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 4
+      },
+      {
+        "id": "p12-6-suruhanjaya",
+        "name": "Suruhanjaya Pencegahan Rasuah Malaysia (SPRM)",
+        "icon": "icons/sprm.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 5
+      },
+      {
+        "id": "p12-7-viewsonic",
+        "name": "ViewSonic Education Hub",
+        "icon": "icons/viewsonic.jpg",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 6
+      },
+      {
+        "id": "p12-8-rd-dutch-lady",
+        "name": "RD Dutch Lady Milk",
+        "icon": "icons/dutchlady.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 7
+      },
+      {
+        "id": "p12-9-rd-yilmu",
+        "name": "RD Yilmu(SOLUSI SERUMPUN SENUSANTARA)",
+        "icon": "icons/yilmurd.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 8
+      },
+      {
+        "id": "p12-10-rakan-delima",
+        "name": "Rakan DELIMa Calendar",
+        "icon": "icons/delimacalendar.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 9
+      },
+      {
+        "id": "p12-11-rd-apple",
+        "name": "RD Apple",
+        "icon": "icons/apple.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 10
+      },
+      {
+        "id": "p12-12-rd-unicef",
+        "name": "RD UNICEF",
+        "icon": "icons/rdunicef.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 11
+      },
+      {
+        "id": "p12-13-rd-google",
+        "name": "RD Google",
+        "icon": "icons/google.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 12
+      },
+      {
+        "id": "p12-14-rd-microsoft",
+        "name": "RD Microsoft",
+        "icon": "icons/microsoft.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 13
+      },
+      {
+        "id": "p12-15-rd-maxis",
+        "name": "RD Maxis",
+        "icon": "icons/maxis.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 14
+      },
+      {
+        "id": "p12-16-rd-totalenergies",
+        "name": "RD TotalEnergies",
+        "icon": "icons/te.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 15
+      },
+      {
+        "id": "p12-17-rd-mdec",
+        "name": "RD MDEC",
+        "icon": "icons/rdmdec.jpg",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 16
+      },
+      {
+        "id": "p12-18-rd-celcomdigi",
+        "name": "RD CelcomDigi",
+        "icon": "icons/rdcelcomdigi.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 17
+      },
+      {
+        "id": "p12-19-rd-els",
+        "name": "RD ELS",
+        "icon": "icons/els.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 18
+      },
+      {
+        "id": "p12-20-rd-hepili",
+        "name": "RD HEPILI",
+        "icon": "icons/hepili.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 19
+      },
+      {
+        "id": "p12-21-rd-pgsl",
+        "name": "RD PGSL",
+        "icon": "icons/pgsl.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 20
+      },
+      {
+        "id": "p12-22-rd-shell",
+        "name": "RD Shell",
+        "icon": "icons/shell.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 21
+      },
+      {
+        "id": "p12-23-rd-fwd",
+        "name": "RD FWD",
+        "icon": "icons/fwd.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 22
+      },
+      {
+        "id": "p12-24-rd-petrosains",
+        "name": "RD Petrosains",
+        "icon": "icons/rdpetrosains.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 23
+      },
+      {
+        "id": "p12-25-rd-pixlr",
+        "name": "RD PIXLR",
+        "icon": "icons/pixlrrd.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 24
+      },
+      {
+        "id": "p12-26-rd-intel",
+        "name": "RD Intel",
+        "icon": "icons/intel.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 25
+      },
+      {
+        "id": "p12-27-rd-bsn",
+        "name": "RD BSN",
+        "icon": "icons/rdbsn.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 26
+      },
+      {
+        "id": "p12-28-rd-yayasan",
+        "name": "RD Yayasan Sime Darby",
+        "icon": "icons/yayasansime.png",
+        "website": "",
+        "pageTitle": "Rakan DELIMa",
+        "pageIndex": 11,
+        "position": 27
+      }
+    ]
+  },
+  {
+    "title": "STEM Simulations",
+    "apps": [
+      {
+        "id": "p13-1-phet-interactive-simulations",
+        "name": "PhET: Interactive Simulations",
+        "icon": "icons/Phet.png",
+        "website": "https://phet.colorado.edu/",
+        "pageTitle": "STEM Simulations",
+        "pageIndex": 12,
+        "position": 0
+      },
+      {
+        "id": "p13-2-concord-consortium",
+        "name": "Concord Consortium:STEM Resource Finder",
+        "icon": "icons/concord.jpg",
+        "website": "",
+        "pageTitle": "STEM Simulations",
+        "pageIndex": 12,
+        "position": 1
+      },
+      {
+        "id": "p13-3-agents-of-change",
+        "name": "Agents of Tech",
+        "icon": "icons/agentsoftech.png",
+        "website": "",
+        "pageTitle": "STEM Simulations",
+        "pageIndex": 12,
+        "position": 2
+      },
+      {
+        "id": "p13-4-pendidikan-stem",
+        "name": "Pendidikan STEM",
+        "icon": "icons/pendidikanstem.png",
+        "website": "",
+        "pageTitle": "STEM Simulations",
+        "pageIndex": 12,
+        "position": 3
+      }
+    ]
+  }
+];
+const WEBSITE_OVERRIDES={
+  "Minecraft Education":"https://education.minecraft.net/",
+  "Google Interland":"https://beinternetawesome.withgoogle.com/en_us/interland",
+  "Pixlr AI Image Generator":"https://pixlr.com/image-generator/",
+  "Photomash Studio":"https://pixlr.com/photomash/",
+  "Pixlr E Photo Editor":"https://pixlr.com/e/",
+  "Pixlr Remove Background":"https://pixlr.com/remove-background/",
+  "Pixlr Desktop":"https://pixlr.com/desktop/",
+  "Pixlr X Quick Editor":"https://pixlr.com/x/",
+  "Schoolytics":"https://schoolytics.com/",
+  "NVDA Reader":"https://www.nvaccess.org/",
+  "Reading Coach":"https://coach.microsoft.com/",
+  "Microsoft MakeCode":"https://www.microsoft.com/en-us/makecode",
+  "KODU Game Lab":"https://www.kodugamelab.com/",
+  "Powtoon Education":"https://www.powtoon.com/education/",
+  "Concord Consortium":"https://concord.org/"
+};
+const SIMPLE_ICON_SLUGS={
+  "MS Copilot":"microsoftcopilot","Gemini AI":"googlegemini","Chat GPT":"openai","Khan Academy":"khanacademy","Perplexity":"perplexity","SUNO AI":"suno",
+  "Canva":"canva","RD Canva":"canva","Micro:bit":"microbit","Kahoot":"kahoot","Quizizz":"quizizz","Tinkercad":"tinkercad","Edpuzzle":"edpuzzle","Padlet":"padlet","Canvas":"canvas","SketchUp for Schools":"sketchup",
+  "Calendar":"googlecalendar","Gmail":"gmail","Drive":"googledrive","Google Photos":"googlephotos","Docs":"googledocs","Slides":"googleslides","Sheet":"googlesheets","Forms":"googleforms","Keep":"googlekeep","Google Translate":"googletranslate","Chat":"googlechat","Site":"googlesites","YouTube":"youtube","Google Education":"google","Google Earth":"googleearth","Google Meet":"googlemeet",
+  "Microsoft Forms":"microsoftforms","Microsoft Stream":"microsoftstream","Microsoft 365":"microsoft365","Word":"microsoftword","Excel":"microsoftexcel","Teams":"microsoftteams","PowerPoint":"microsoftpowerpoint","Yammer":"yammer","OneNote":"microsoftonenote","OneDrive":"microsoftonedrive","Whiteboard":"microsoftwhiteboard","Microsoft Loop":"microsoftloop","Minecraft Education":"minecraft","Powtoon Education":"powtoon",
+  "Pixlr AI Image Generator":"pixlr","Photomash Studio":"pixlr","Pixlr E Photo Editor":"pixlr","Pixlr Remove Background":"pixlr","Pixlr Desktop":"pixlr","Pixlr X Quick Editor":"pixlr","RD PIXLR":"pixlr"
+};
+function faviconFor(url){
+  if(!url)return "";
+  return `https://www.google.com/s2/favicons?domain_url=${encodeURIComponent(url)}&sz=128`;
+}
+DELIMA_PAGES.forEach(page=>page.apps.forEach(app=>{
+  app.originalIcon=app.icon;
+  if(!app.website&&WEBSITE_OVERRIDES[app.name])app.website=WEBSITE_OVERRIDES[app.name];
+  app.faviconIcon=app.originalIcon;
+  app.icon=app.originalIcon;
+}));
+const ALL_APPS = DELIMA_PAGES.flatMap(page=>page.apps);
+const STORAGE_KEY="delimaDetectiveTop5_hybrid_v6";
+const MAX_HEARTS=5, MISSION_SIZE=5;
+let currentGroup="",caseNumber="",mission=[],found=new Set(),hearts=MAX_HEARTS;
+let activePage=0,gameActive=false,startAt=0,timerFrame=null,finalMs=0,toastTimer=null,rankingMemory=[];
+const $=id=>document.getElementById(id);
+const ADMIN_PASSWORD_B64="SkVBMTAwMS1sNDNARGVsaW1h";
+document.addEventListener("error",event=>{
+  const img=event.target;if(!(img instanceof HTMLImageElement))return;
+  if(!img.dataset.faviconTried&&img.dataset.favicon&&img.src!==img.dataset.favicon){img.dataset.faviconTried="1";img.src=img.dataset.favicon;return}
+  if(!img.dataset.fallbackTried&&img.dataset.fallback&&img.src!==img.dataset.fallback){img.dataset.fallbackTried="1";img.src=img.dataset.fallback}
+},true);
+
+function escapeHtml(v){return String(v).replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;")}
+function appMatchKey(app){
+  const name=String(app.name||"").trim().toLowerCase();
+  const website=String(app.website||"").trim().replace(/\/+$/,"").toLowerCase();
+  return `${name}|${website||app.id}`;
+}
+function ensureIcons(root=document){
+  setTimeout(()=>root.querySelectorAll('img[data-favicon]').forEach(img=>{if((!img.complete||!img.naturalWidth)&&img.dataset.favicon&&img.src!==img.dataset.favicon)img.src=img.dataset.favicon}),1600);
+  setTimeout(()=>root.querySelectorAll('img[data-fallback]').forEach(img=>{if((!img.complete||!img.naturalWidth)&&img.dataset.fallback&&img.src!==img.dataset.fallback)img.src=img.dataset.fallback}),3400);
+}
+function shuffle(a){const x=[...a];for(let i=x.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[x[i],x[j]]=[x[j],x[i]]}return x}
+function formatTime(ms){ms=Math.max(0,Math.floor(ms));const m=Math.floor(ms/60000),s=Math.floor(ms%60000/1000),h=Math.floor(ms%1000/10);return `${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}.${String(h).padStart(2,"0")}`}
+function showToast(msg,type="info",duration=1900){clearTimeout(toastTimer);const t=$("toast");t.textContent=msg;t.className=`toast ${type} show`;toastTimer=setTimeout(()=>t.classList.remove("show"),duration)}
+function showScreen(id){document.querySelectorAll(".screen").forEach(s=>s.classList.remove("active"));$(id).classList.add("active");document.body.classList.toggle("portal-mode",id==="portalScreen");window.scrollTo(0,0)}
+function randomCase(){return "#"+Math.floor(10000+Math.random()*90000)}
+function stopTimer(){if(timerFrame)cancelAnimationFrame(timerFrame);timerFrame=null}
+function startTimer(){stopTimer();startAt=performance.now();gameActive=true;const tick=now=>{if(!gameActive)return;$("timer").textContent=formatTime(now-startAt);timerFrame=requestAnimationFrame(tick)};timerFrame=requestAnimationFrame(tick)}
+function elapsed(){return startAt?performance.now()-startAt:0}
+
+function getRanking(){try{const x=JSON.parse(localStorage.getItem(STORAGE_KEY)||"[]");if(Array.isArray(x)){rankingMemory=x;return x}}catch{}return rankingMemory}
+function saveRanking(x){rankingMemory=x.slice(0,5);try{localStorage.setItem(STORAGE_KEY,JSON.stringify(rankingMemory))}catch{}}
+function addScore(group,timeMs){
+  const old=getRanking(),oldFirst=old.length?old[0].timeMs:null,key=group.trim().toLowerCase();
+  const existing=old.find(x=>x.group.trim().toLowerCase()===key);
+  if(existing&&existing.timeMs<=timeMs){
+    const sorted=[...old].sort((a,b)=>a.timeMs-b.timeMs).slice(0,5);
+    return{rank:sorted.findIndex(x=>x.group.trim().toLowerCase()===key)+1,isRecord:false,isFirst:false}
+  }
+  const next=[...old.filter(x=>x.group.trim().toLowerCase()!==key),{group,timeMs,savedAt:Date.now()}].sort((a,b)=>a.timeMs-b.timeMs).slice(0,5);
+  saveRanking(next);
+  return{rank:next.findIndex(x=>x.group.trim().toLowerCase()===key)+1,isRecord:oldFirst!==null&&timeMs<oldFirst,isFirst:oldFirst===null}
+}
+function renderRanking(id){
+  const box=$(id),data=getRanking();box.innerHTML="";
+  if(!data.length){box.innerHTML='<div class="empty">No completed teams yet.</div>';return}
+  const medals=["🥇","🥈","🥉","4","5"];
+  data.forEach((x,i)=>box.insertAdjacentHTML("beforeend",`<div class="rank-row"><div class="rank-no">${medals[i]}</div><div class="rank-team" title="${escapeHtml(x.group)}">${escapeHtml(x.group)}</div><div class="rank-time">${formatTime(x.timeMs)}</div></div>`))
+}
+function renderRanks(){renderRanking("startRanking");renderRanking("portalRanking")}
+
+function resetRound(){
+  stopTimer();mission=[];found=new Set();hearts=MAX_HEARTS;activePage=0;gameActive=false;startAt=0;finalMs=0;$("timer").textContent="00:00.00"
+}
+function renderBacks(){
+  const d=$("dealArea");d.innerHTML="";
+  for(let i=0;i<MISSION_SIZE;i++)d.insertAdjacentHTML("beforeend",'<div class="flip-card"><div class="flip-inner"><div class="flip-face flip-back"><div class="question">?</div></div><div class="flip-face flip-front"></div></div></div>')
+}
+function enterCase(){
+  const n=$("groupName").value.trim();
+  if(!n){showToast("Please enter a team name.","bad");$("groupName").focus();return}
+  currentGroup=n;caseNumber=randomCase();resetRound();$("caseGroup").textContent=n;$("caseNo").textContent="CASE "+caseNumber;
+  $("caseStatus").textContent="Awaiting case generation...";$("drawBtn").disabled=false;renderBacks();showScreen("caseScreen")
+}
+function drawCase(){
+  if(mission.length)return;
+  const missionPool=[...new Map(ALL_APPS.map(app=>[appMatchKey(app),app])).values()];mission=shuffle(missionPool).slice(0,MISSION_SIZE);$("drawBtn").disabled=true;$("caseStatus").textContent="Decrypting case file...";renderBacks();
+  const cards=[...document.querySelectorAll(".flip-card")];
+  cards.forEach((card,i)=>{
+    const app=mission[i],front=card.querySelector(".flip-front");
+    front.innerHTML=`<img src="${app.originalIcon||app.icon}" data-fallback="${app.originalIcon||app.icon}" alt=""><h3>${escapeHtml(app.name)}</h3>`;
+    setTimeout(()=>{
+      card.classList.add("flipped");$("caseStatus").textContent=`Card ${i+1} of ${MISSION_SIZE} revealed`;
+      if(i===MISSION_SIZE-1){
+        setTimeout(()=>{
+          $("caseStatus").textContent="Evidence revealed. Loading DELIMa Portal...";
+          setTimeout(()=>{openPortal();startTimer()},500);
+        },730);
+      }
+    },400+i*690)
+  });
+  ensureIcons($("dealArea"));
+}
+function openPortal(){
+  $("portalGroup").textContent="TEAM: "+currentGroup;$("portalCase").textContent="CASE "+caseNumber;
+  renderHearts();renderMiniCards();renderRanks();renderDots();renderPage();showScreen("portalScreen")
+}
+function renderHearts(){$("hearts").textContent="❤️".repeat(hearts)+"🤍".repeat(MAX_HEARTS-hearts)}
+function renderMiniCards(){
+  const b=$("miniCards");b.innerHTML="";$("foundCount").textContent=`${found.size}/${MISSION_SIZE}`;
+  mission.forEach(app=>{
+    const row=document.createElement("div");row.className="mini-card"+(found.has(appMatchKey(app))?" found":"");
+    row.innerHTML=`<img src="${app.originalIcon||app.icon}" data-fallback="${app.originalIcon||app.icon}" alt=""><div class="mini-name">${escapeHtml(app.name)}</div><div class="mini-check">${found.has(appMatchKey(app))?"✓":"○"}</div>`;b.appendChild(row)
+  });
+  ensureIcons(b);
+}
+function renderDots(){
+  const b=$("pageDots");b.innerHTML="";
+  DELIMA_PAGES.forEach((p,i)=>{const d=document.createElement("button");d.className="page-dot"+(i===activePage?" active":"");d.title=p.title;d.addEventListener("click",()=>{activePage=i;renderPage();renderDots()});b.appendChild(d)})
+}
+function renderPage(){
+  const page=DELIMA_PAGES[activePage];$("delimaTitle").textContent=page.title;$("pageCounter").textContent=`PAGE ${activePage+1} / ${DELIMA_PAGES.length}`;
+  $("prevPage").disabled=activePage===0;$("nextPage").disabled=activePage===DELIMA_PAGES.length-1;
+  const g=$("pageGrid");g.innerHTML="";
+  page.apps.forEach(app=>{
+    const btn=document.createElement("button");btn.className="delima-app"+(found.has(appMatchKey(app))?" done":"");btn.title=app.name;
+    const position=Number.isFinite(app.position)?app.position:page.apps.indexOf(app);
+    btn.style.gridColumn=String((position%6)+1);
+    btn.style.gridRow=String(Math.floor(position/6)+1);
+    btn.innerHTML=`<span class="delima-icon"><img src="${app.originalIcon||app.icon}" data-fallback="${app.originalIcon||app.icon}" alt=""></span><span class="delima-label">${escapeHtml(app.name)}</span>`;
+    btn.addEventListener("click",()=>verify(app,btn));g.appendChild(btn)
+  });
+  ensureIcons(g);
+}
+function verify(app,tile){
+  if(!gameActive)return;
+  const key=appMatchKey(app);
+  const target=mission.find(x=>appMatchKey(x)===key);
+  if(target&&found.has(key)){showToast("You've already found this application.","info");return}
+  if(target){
+    found.add(key);tile.classList.add("correct","done");setTimeout(()=>tile.classList.remove("correct"),600);
+    renderMiniCards();showToast(`✅ Application Found: ${app.name}`,"good");
+    if(found.size===MISSION_SIZE)completeCase();return
+  }
+  hearts--;renderHearts();tile.classList.add("wrong");setTimeout(()=>tile.classList.remove("wrong"),600);
+  showToast(`❌ Incorrect Application! ${hearts} heart${hearts===1?"":"s"} remaining.`,"bad");
+  if(hearts<=0)failCase()
+}
+function completeCase(){
+  finalMs=elapsed();gameActive=false;stopTimer();$("timer").textContent=formatTime(finalMs);
+  const score=addScore(currentGroup,Math.round(finalMs));renderRanks();
+  $("resultIcon").textContent=score.isRecord?"🏆":score.isFirst?"🥇":"✅";
+  $("resultTitle").className="result-title"+(score.isRecord||score.isFirst?" new":"");
+  $("resultTitle").textContent=score.isRecord?"NEW RECORD!":score.isFirst?"FIRST RECORD!":"MISSION COMPLETE";
+  $("resultGroup").textContent=currentGroup;$("resultTime").textContent=formatTime(finalMs);
+  $("resultExtra").textContent=(score.rank>0?`Current Top 5 rank: #${score.rank}. `:"This result did not enter the Top 5. ")+(hearts===MAX_HEARTS?"Perfect mission — no hearts lost.":`${hearts} heart${hearts===1?"":"s"} remaining.`);
+  $("resultModal").classList.add("show")
+}
+function failCase(){
+  finalMs=elapsed();gameActive=false;stopTimer();$("timer").textContent=formatTime(finalMs);
+  $("resultIcon").textContent="💔";$("resultTitle").className="result-title fail";$("resultTitle").textContent="MISSION FAILED";
+  $("resultGroup").textContent=currentGroup;$("resultTime").textContent=formatTime(finalMs);
+  $("resultExtra").textContent="All five hearts were lost. Failed attempts are not added to the leaderboard.";$("resultModal").classList.add("show")
+}
+function abortCase(){
+  if(!gameActive)return;if(!confirm("End this mission? The current time will not be saved."))return;
+  gameActive=false;stopTimer();$("resultIcon").textContent="📁";$("resultTitle").className="result-title fail";$("resultTitle").textContent="MISSION ENDED";
+  $("resultGroup").textContent=currentGroup;$("resultTime").textContent=formatTime(elapsed());$("resultExtra").textContent="This mission was ended and the result was not saved.";$("resultModal").classList.add("show")
+}
+function playAgain(){
+  $("resultModal").classList.remove("show");caseNumber=randomCase();resetRound();$("caseGroup").textContent=currentGroup;$("caseNo").textContent="CASE "+caseNumber;
+  $("caseStatus").textContent="Awaiting case generation...";$("drawBtn").disabled=false;renderBacks();showScreen("caseScreen")
+}
+function nextGroup(){
+  $("resultModal").classList.remove("show");resetRound();currentGroup="";caseNumber="";$("groupName").value="";renderRanks();showScreen("startScreen");setTimeout(()=>$("groupName").focus(),100)
+}
+
+$("startBtn").addEventListener("click",enterCase);
+$("groupName").addEventListener("keydown",e=>{if(e.key==="Enter")enterCase()});
+$("drawBtn").addEventListener("click",drawCase);
+$("prevPage").addEventListener("click",()=>{if(activePage>0){activePage--;renderPage();renderDots()}});
+$("nextPage").addEventListener("click",()=>{if(activePage<DELIMA_PAGES.length-1){activePage++;renderPage();renderDots()}});
+$("abortBtn").addEventListener("click",abortCase);
+$("againBtn").addEventListener("click",playAgain);
+$("nextGroupBtn").addEventListener("click",nextGroup);
+$("resetRankBtn").addEventListener("click",()=>{
+  const password=prompt("Administrator password:");
+  if(password===null)return;
+  if(password!==atob(ADMIN_PASSWORD_B64)){showToast("Incorrect administrator password.","bad",2600);return}
+  if(confirm("Password accepted. Clear all Top 5 records?")){rankingMemory=[];try{localStorage.removeItem(STORAGE_KEY)}catch{}renderRanks();showToast("Leaderboard cleared.","info")}
+});
+document.addEventListener("keydown",e=>{if(!$("portalScreen").classList.contains("active"))return;if(e.key==="ArrowLeft"&&activePage>0){activePage--;renderPage();renderDots()}if(e.key==="ArrowRight"&&activePage<DELIMA_PAGES.length-1){activePage++;renderPage();renderDots()}});
+window.addEventListener("beforeunload",e=>{if(gameActive){e.preventDefault();e.returnValue=""}});
+renderRanks();renderBacks();$("groupName").focus();
+</script>
+</body>
+</html>
